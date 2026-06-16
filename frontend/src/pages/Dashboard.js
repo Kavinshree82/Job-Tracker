@@ -31,7 +31,7 @@ function Dashboard() {
     }
   };
 
-  useEffect(() => { fetchJobs(); }, []); 
+  useEffect(() => { fetchJobs(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const handleAdd = async (form) => {
     try {
       await axios.post('/jobs', form, {
