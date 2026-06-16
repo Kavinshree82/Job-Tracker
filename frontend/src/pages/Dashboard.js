@@ -4,6 +4,7 @@ import axios from '../api/axios';
 import Navbar from '../components/Navbar';
 import JobCard from '../components/JobCard';
 import JobForm from '../components/JobForm';
+import Papa from 'papaparse';
 
 const STATUSES = ['Applied', 'Interview', 'Offer', 'Rejected'];
 
@@ -70,6 +71,27 @@ const allTags = [...new Set(jobs.flatMap(job => job.tags || []))];
     }
   };
 
+  const handleExport = () => {
+  const exportData = jobs.map(job => ({
+    Company: job.company,
+    Position: job.position,
+    Status: job.status,
+    Deadline: job.deadline ? new Date(job.deadline).toLocaleDateString() : '',
+    Notes: job.notes || '',
+    Tags: job.tags ? job.tags.join(', ') : '',
+    Applied_On: new Date(job.createdAt).toLocaleDateString()
+  }));
+
+  const csv = Papa.unparse(exportData);
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'job-applications.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  };
+
  const filteredJobs = jobs.filter(job => {
   const matchesSearch = job.company.toLowerCase().includes(search.toLowerCase()) ||
     job.position.toLowerCase().includes(search.toLowerCase());
@@ -92,6 +114,11 @@ const allTags = [...new Set(jobs.flatMap(job => job.tags || []))];
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
+        <div style={styles.exportRow}>
+          <button style={styles.exportBtn} onClick={handleExport}>
+            📥 Export to CSV
+          </button>
+        </div>
         <div style={styles.tagFilter}>
           <span style={styles.tagFilterLabel}>Filter by tag:</span>
           <span
@@ -139,7 +166,9 @@ const styles = {
   columnTitle: { margin: '0 0 15px 0', paddingBottom: '8px', color: '#333', fontSize: '16px' },
   tagFilter: { display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' },
 tagFilterLabel: { fontSize: '14px', color: '#666' },
-tagBtn: { padding: '4px 12px', borderRadius: '12px', fontSize: '13px', cursor: 'pointer', fontWeight: 'bold' }
+tagBtn: { padding: '4px 12px', borderRadius: '12px', fontSize: '13px', cursor: 'pointer', fontWeight: 'bold' },
+exportRow: { display: 'flex', justifyContent: 'flex-end', marginBottom: '15px' },
+exportBtn: { padding: '8px 20px', background: '#016307', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }
 };
 
 export default Dashboard;
