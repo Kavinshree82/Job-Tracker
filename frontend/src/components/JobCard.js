@@ -13,6 +13,13 @@ function JobCard({ job, onDelete, onEdit }) {
         </p>
       )}
       {job.notes && <p style={styles.notes}>{job.notes}</p>}
+      {job.tags && job.tags.length > 0 && (
+      <div style={styles.tags}>
+        {job.tags.map((tag, i) => (
+          <span key={i} style={styles.tag}>{tag}</span>
+        ))}
+      </div>
+      )}
       <div style={styles.actions}>
         <button style={styles.editBtn} onClick={() => onEdit(job)}>Edit</button>
         <button style={styles.deleteBtn} onClick={() => onDelete(job._id)}>Delete</button>
@@ -28,8 +35,10 @@ const styles = {
   deadline: { fontSize: '12px', margin: '0 0 5px 0' },
   notes: { fontSize: '12px', color: '#888', margin: '0 0 10px 0' },
   actions: { display: 'flex', gap: '8px' },
-  editBtn: { padding: '4px 10px', background: '#4f46e5', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' },
-  deleteBtn: { padding: '4px 10px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }
+  editBtn: { padding: '4px 10px', background: '#6445d5', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' },
+  deleteBtn: { padding: '4px 10px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' },
+  tags: { display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '8px' },
+tag: { background: '#e0e7ff', color: '#6445d5', padding: '2px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: 'bold' }
 };
 
 export default JobCard;

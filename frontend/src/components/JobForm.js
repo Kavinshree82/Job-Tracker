@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 function JobForm({ onSubmit, editJob, onCancel }) {
-  const [form, setForm] = useState({ company: '', position: '', status: 'Applied', deadline: '', notes: '' });
+  const [form, setForm] = useState({ company: '', position: '', status: 'Applied', deadline: '', notes: '', tags: [] });
 
   useEffect(() => {
     if (editJob) {
@@ -10,7 +10,8 @@ function JobForm({ onSubmit, editJob, onCancel }) {
         position: editJob.position,
         status: editJob.status,
         deadline: editJob.deadline ? editJob.deadline.split('T')[0] : '',
-        notes: editJob.notes || ''
+        notes: editJob.notes || '',
+        tags: editJob.tags || []
       });
     }
   }, [editJob]);
@@ -18,7 +19,7 @@ function JobForm({ onSubmit, editJob, onCancel }) {
   const handleSubmit = () => {
     if (!form.company || !form.position) return alert('Company and Position are required');
     onSubmit(form);
-    setForm({ company: '', position: '', status: 'Applied', deadline: '', notes: '' });
+    setForm({ company: '', position: '', status: 'Applied', deadline: '', notes: '', tags: [] });
   };
 
   return (
@@ -39,6 +40,12 @@ function JobForm({ onSubmit, editJob, onCancel }) {
         onChange={e => setForm({ ...form, deadline: e.target.value })} />
       <textarea style={styles.input} placeholder="Notes" value={form.notes}
         onChange={e => setForm({ ...form, notes: e.target.value })} />
+      <input
+        style={styles.input}
+        placeholder="Tags (comma separated e.g. Remote, Startup, Urgent)"
+        value={form.tags ? form.tags.join(', ') : ''}
+        onChange={e => setForm({ ...form, tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean) })}
+      />
       <div style={styles.actions}>
         <button style={styles.submitBtn} onClick={handleSubmit}>{editJob ? 'Update' : 'Add Job'}</button>
         {editJob && <button style={styles.cancelBtn} onClick={onCancel}>Cancel</button>}
@@ -52,7 +59,7 @@ const styles = {
   title: { margin: '0 0 15px 0', color: '#333' },
   input: { width: '100%', padding: '8px', marginBottom: '10px', borderRadius: '6px', border: '1px solid #ddd', boxSizing: 'border-box', fontSize: '14px' },
   actions: { display: 'flex', gap: '10px' },
-  submitBtn: { padding: '8px 20px', background: '#4f46e5', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' },
+  submitBtn: { padding: '8px 20px', background: '#0900ad', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' },
   cancelBtn: { padding: '8px 20px', background: '#6b7280', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }
 };
 

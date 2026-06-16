@@ -16,9 +16,11 @@ const STATUS_COLORS = {
 
 function Dashboard() {
   const { user } = useAuth();
-  const [jobs, setJobs] = useState([]);
-  const [editJob, setEditJob] = useState(null);
-  const [search, setSearch] = useState('');
+ const [jobs, setJobs] = useState([]);
+const [editJob, setEditJob] = useState(null);
+const [search, setSearch] = useState('');
+const [selectedTag, setSelectedTag] = useState('');
+const allTags = [...new Set(jobs.flatMap(job => job.tags || []))];
 
   const fetchJobs = async () => {
     try {
@@ -67,10 +69,12 @@ function Dashboard() {
     }
   };
 
-  const filteredJobs = jobs.filter(job =>
-    job.company.toLowerCase().includes(search.toLowerCase()) ||
-    job.position.toLowerCase().includes(search.toLowerCase())
-  );
+ const filteredJobs = jobs.filter(job => {
+  const matchesSearch = job.company.toLowerCase().includes(search.toLowerCase()) ||
+    job.position.toLowerCase().includes(search.toLowerCase());
+  const matchesTag = selectedTag === '' || (job.tags && job.tags.includes(selectedTag));
+  return matchesSearch && matchesTag;
+});
 
   return (
     <div style={styles.page}>
@@ -87,6 +91,20 @@ function Dashboard() {
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
+        <div style={styles.tagFilter}>
+          <span style={styles.tagFilterLabel}>Filter by tag:</span>
+          <span
+            style={{ ...styles.tagBtn, background: selectedTag === '' ? '#4f46e5' : '#e0e7ff', color: selectedTag === '' ? 'white' : '#4f46e5' }}
+            onClick={() => setSelectedTag('')}
+          >All</span>
+          {allTags.map(tag => (
+            <span
+              key={tag}
+              style={{ ...styles.tagBtn, background: selectedTag === tag ? '#4f46e5' : '#e0e7ff', color: selectedTag === tag ? 'white' : '#4f46e5' }}
+              onClick={() => setSelectedTag(tag)}
+            >{tag}</span>
+          ))}
+        </div>
         <div style={styles.board}>
           {STATUSES.map(status => (
             <div key={status} style={styles.column}>
@@ -117,7 +135,10 @@ const styles = {
   search: { width: '100%', padding: '10px', marginBottom: '20px', borderRadius: '8px', border: '1px solid #ddd', boxSizing: 'border-box', fontSize: '14px' },
   board: { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' },
   column: { background: '#f8f9fa', padding: '15px', borderRadius: '10px', minHeight: '400px' },
-  columnTitle: { margin: '0 0 15px 0', paddingBottom: '8px', color: '#333', fontSize: '16px' }
+  columnTitle: { margin: '0 0 15px 0', paddingBottom: '8px', color: '#333', fontSize: '16px' },
+  tagFilter: { display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' },
+tagFilterLabel: { fontSize: '14px', color: '#666' },
+tagBtn: { padding: '4px 12px', borderRadius: '12px', fontSize: '13px', cursor: 'pointer', fontWeight: 'bold' }
 };
 
 export default Dashboard;

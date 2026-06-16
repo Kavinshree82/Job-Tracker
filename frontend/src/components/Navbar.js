@@ -23,7 +23,7 @@ function Navbar() {
 }
 
 const styles = {
-  nav: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 30px', background: '#4f46e5', color: 'white' },
+  nav: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 30px', background: '#0900ad', color: 'white' },
   logo: { margin: 0 },
   right: { display: 'flex', alignItems: 'center', gap: '15px' },
   name: { fontSize: '14px' },
