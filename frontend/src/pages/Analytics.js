@@ -17,7 +17,7 @@ function Analytics() {
   const { user } = useAuth();
   const [jobs, setJobs] = useState([]);
 
-  useEffect(() => {
+ useEffect(() => {
     const fetch = async () => {
       const res = await axios.get('/jobs', {
         headers: { Authorization: `Bearer ${user.token}` }
@@ -25,8 +25,7 @@ function Analytics() {
       setJobs(res.data);
     };
     fetch();
-  }, []);
-
+  }, [user.token]);
   const counts = STATUSES.map(s => jobs.filter(j => j.status === s).length);
 
   const barData = {

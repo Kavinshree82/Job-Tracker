@@ -31,8 +31,7 @@ function Dashboard() {
     }
   };
 
-  useEffect(() => { fetchJobs(); }, []);
-
+  useEffect(() => { fetchJobs(); }, []); 
   const handleAdd = async (form) => {
     try {
       await axios.post('/jobs', form, {
