@@ -35,6 +35,7 @@ const allTags = [...new Set(jobs.flatMap(job => job.tags || []))];
 
   useEffect(() => { fetchJobs(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const handleAdd = async (form) => {
+    console.log('Form data:', form); // add this line
     try {
       await axios.post('/jobs', form, {
         headers: { Authorization: `Bearer ${user.token}` }

@@ -12,9 +12,9 @@ const getJobs = async (req, res) => {
 
 // Create a job
 const createJob = async (req, res) => {
-  const { company, position, status, deadline, notes } = req.body;
+  const { company, position, status, deadline, notes, tags } = req.body;
   try {
-    const job = await Job.create({ user: req.user._id, company, position, status, deadline, notes });
+    const job = await Job.create({ user: req.user._id, company, position, status, deadline, notes, tags });
     res.status(201).json(job);
   } catch (error) {
     res.status(500).json({ message: error.message });
